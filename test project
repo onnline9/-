@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>שעון החול של הזמן</title>
+    <style>
+        body {
+            background-color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        #hourglass {
+            width: 150px;
+            height: 300px;
+            background: linear-gradient(to top, sandybrown 50%, transparent 50%);
+            border: 2px solid black;
+            border-radius: 50% 50% 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+        #sand-top, #sand-bottom {
+            position: absolute;
+            width: 100%;
+            height: 50%;
+            background: sandybrown;
+        }
+        #sand-bottom {
+            bottom: 0;
+            background: transparent;
+        }
+        input {
+            margin: 20px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #percent {
+            margin-top: 20px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="hourglass">
+        <div id="sand-top"></div>
+        <div id="sand-bottom"></div>
+    </div>
+    
+    <input type="number" id="ageInput" placeholder="הזן את הגיל שלך">
+    <button id="startButton">הפעל</button>
+    
+    <div id="percent"></div>
+    
+    <script>
+        const sandTop = document.getElementById('sand-top');
+        const sandBottom = document.getElementById('sand-bottom');
+        const startButton = document.getElementById('startButton');
+        const percentDisplay = document.getElementById('percent');
+        const ageInput = document.getElementById('ageInput');
+
+        let interval;
+
+        startButton.addEventListener('click', () => {
+            const age = parseFloat(ageInput.value);
+            if (!age || age <= 0 || age >= 85) {
+                alert("אנא הזן גיל חוקי בין 0 ל-85");
+                return;
+            }
+
+            const lifeExpectancy = 85;
+            const percentageLived = (age / lifeExpectancy) * 100;
+            const sandFallSpeed = 5000; // מילי שניות
+
+            // שינוי גודל השכבה העליונה
+            sandTop.style.height = `${100 - percentageLived}%`;
+            sandBottom.style.height = `${percentageLived}%`;
+            percentDisplay.textContent = `${percentageLived.toFixed(2)}% מהחיים עברו`;
+
+            startButton.textContent = "עצור";
+            startButton.removeEventListener('click', startAction);
+            startButton.addEventListener('click', stopAction);
+        });
+
+        function stopAction() {
+            alert("you wish! time cannot be stopped!");
+            location.reload();
+        }
+    </script>
+</body>
+</html>
